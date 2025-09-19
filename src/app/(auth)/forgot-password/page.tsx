@@ -1,31 +1,17 @@
 "use client";
 
-// import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-
-import type { ForgotPasswordFormData } from "@/lib/types";
-import { toast } from "sonner";
-import { forgotPasswordInitialization } from "@/services/auth/forgot-password";
 import ForgotPasswordForm from "@/components/forgot-password-form";
+import { ForgotPasswordRequestDto } from "@/lib/types/auth-types";
+import useForgotPassword from "@/lib/hooks/auth/useForgotPassword";
 
 const ForgotPasswordInitializationPage = () => {
-  //   const navigate = useNavigate();
-
   const { mutate: forgotPasswordInitializationMutation, isPending } =
-    useMutation(forgotPasswordInitialization());
+    useForgotPassword();
 
   const handleForgotPasswordInitialization = async (
-    values: ForgotPasswordFormData
+    values: ForgotPasswordRequestDto
   ) => {
-    forgotPasswordInitializationMutation(values, {
-      onSuccess: () => {
-        // navigate("/login");
-      },
-
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
+    forgotPasswordInitializationMutation(values);
   };
 
   return (

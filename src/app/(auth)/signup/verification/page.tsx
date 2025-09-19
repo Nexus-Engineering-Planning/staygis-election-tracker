@@ -1,30 +1,15 @@
 "use client";
 
-// import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-
-import type { VerificationFormData } from "@/lib/types";
-import { toast } from "sonner";
-import { signupVerification } from "@/services/auth/signup";
 import VerificationForm from "@/components/verification-form";
+import { VerificationRequestDto } from "@/lib/types/auth-types";
+import useSignupVerification from "@/lib/hooks/auth/useSignupVerification";
 
 const SignupVerificationPage = () => {
-  //   const navigate = useNavigate();
+  const { mutate: signupVerificationMutate, isPending } =
+    useSignupVerification();
 
-  const { mutate: signupVerificationMutation, isPending } = useMutation(
-    signupVerification()
-  );
-
-  const handleSignupVerification = async (values: VerificationFormData) => {
-    signupVerificationMutation(values, {
-      onSuccess: () => {
-        // navigate("/login");
-      },
-
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
+  const handleSignupVerification = async (values: VerificationRequestDto) => {
+    signupVerificationMutate(values);
   };
 
   return (

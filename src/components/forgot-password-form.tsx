@@ -15,11 +15,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { forgotPasswordFormSchema } from "@/lib/constants";
-import type { ForgotPasswordFormData } from "@/lib/types";
 import { useEffect } from "react";
+import { ForgotPasswordRequestDto } from "@/lib/types/auth-types";
 
 interface ForgotPasswordFormProps extends React.ComponentProps<"div"> {
-  onRequestForgotPassword: (values: ForgotPasswordFormData) => void;
+  onRequestForgotPassword: (values: ForgotPasswordRequestDto) => void;
   isLoading?: boolean;
 }
 
@@ -33,15 +33,15 @@ const ForgotPasswordForm = ({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotPasswordFormData>({
+  } = useForm<ForgotPasswordRequestDto>({
     resolver: zodResolver(forgotPasswordFormSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const onSubmitHandler: SubmitHandler<ForgotPasswordFormData> = (
-    values: ForgotPasswordFormData
+  const onSubmitHandler: SubmitHandler<ForgotPasswordRequestDto> = (
+    values: ForgotPasswordRequestDto
   ) => {
     onRequestForgotPassword(values);
   };
@@ -79,22 +79,6 @@ const ForgotPasswordForm = ({
                   </div>
                 )}
               />
-
-              {/* <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <div className="grid gap-3">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                    />
-                  </div>
-                )}
-              /> */}
 
               <div className="flex flex-col gap-3">
                 <Button disabled={isLoading} type="submit" className="w-full">

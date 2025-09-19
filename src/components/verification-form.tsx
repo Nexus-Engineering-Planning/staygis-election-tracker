@@ -19,11 +19,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { verificationFormSchema } from "@/lib/constants";
-import type { VerificationFormData } from "@/lib/types";
 import { useEffect } from "react";
+import { VerificationRequestDto } from "@/lib/types/auth-types";
 
 interface VerificationFormProps extends React.ComponentProps<"div"> {
-  onVerify: (values: VerificationFormData) => void;
+  onVerify: (values: VerificationRequestDto) => void;
   isLoading?: boolean;
 }
 
@@ -38,7 +38,7 @@ const VerificationForm = ({
     handleSubmit,
     getValues,
     formState: { errors },
-  } = useForm<VerificationFormData>({
+  } = useForm<VerificationRequestDto>({
     resolver: zodResolver(verificationFormSchema),
     defaultValues: {
       email: "victorotbabs@gmail.com",
@@ -48,8 +48,8 @@ const VerificationForm = ({
 
   const email = getValues("email");
 
-  const onSubmitHandler: SubmitHandler<VerificationFormData> = (
-    values: VerificationFormData
+  const onSubmitHandler: SubmitHandler<VerificationRequestDto> = (
+    values: VerificationRequestDto
   ) => {
     onVerify(values);
   };
@@ -92,22 +92,6 @@ const VerificationForm = ({
                   </div>
                 )}
               />
-
-              {/* <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <div className="grid gap-3">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                    />
-                  </div>
-                )}
-              /> */}
 
               <div className="flex flex-col gap-3">
                 <Button disabled={isLoading} type="submit" className="w-full">

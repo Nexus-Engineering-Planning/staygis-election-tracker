@@ -15,25 +15,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { signupFormSchema } from "@/lib/constants";
-import type { SignupFormData } from "@/lib/types";
 import { useEffect } from "react";
+import { SignupRequestDto } from "@/lib/types/auth-types";
+import useSignup from "@/lib/hooks/auth/use-signup";
 
-interface SignupFormProps extends React.ComponentProps<"div"> {
-  onPasswordSignup: (values: SignupFormData) => void;
-  isLoading?: boolean;
-}
-
-function SignupForm({
-  className,
-  onPasswordSignup,
-  isLoading,
-  ...props
-}: SignupFormProps) {
+function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupFormData>({
+  } = useForm<SignupRequestDto>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
       email: "",
@@ -41,10 +32,13 @@ function SignupForm({
     },
   });
 
-  const onSubmitHandler: SubmitHandler<SignupFormData> = (
-    values: SignupFormData
+  const { useAdminSignup } = useSignup();
+  const { mutate: signupMutate, isPending: isLoading } = useAdminSignup();
+
+  const onSubmitHandler: SubmitHandler<SignupRequestDto> = (
+    values: SignupRequestDto
   ) => {
-    onPasswordSignup(values);
+    signupMutate(values);
   };
 
   useEffect(() => {
