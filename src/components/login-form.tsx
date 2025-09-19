@@ -1,3 +1,5 @@
+"use client";
+
 import { cn, displayFormErrors } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,37 +14,31 @@ import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
-import { loginFormSchema } from "@/lib/constants";
-import type { LoginFormData } from "@/lib/types";
+import { adminLoginFormSchema } from "@/lib/constants";
 import { useEffect } from "react";
+import { AdminLoginRequestDto } from "@/lib/types/auth-types";
+import useAdminLogin from "@/lib/hooks/auth/useAdminLogin";
 
-interface LoginFormProps extends React.ComponentProps<"div"> {
-  onPasswordLogin: (values: LoginFormData) => void;
-  isLoading?: boolean;
-}
-
-const LoginForm = ({
-  className,
-  onPasswordLogin,
-  isLoading,
-  ...props
-}: LoginFormProps) => {
+const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginFormSchema),
+  } = useForm<AdminLoginRequestDto>({
+    resolver: zodResolver(adminLoginFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmitHandler: SubmitHandler<LoginFormData> = (
-    values: LoginFormData
+  const { mutate: adminLoginMutate, isPending: isLoginLoading } =
+    useAdminLogin();
+
+  const onSubmitHandler: SubmitHandler<AdminLoginRequestDto> = (
+    values: AdminLoginRequestDto
   ) => {
-    onPasswordLogin(values);
+    adminLoginMutate(values);
   };
 
   useEffect(() => {
@@ -103,8 +99,12 @@ const LoginForm = ({
                 )}
               />
               <div className="flex flex-col gap-3">
-                <Button disabled={isLoading} type="submit" className="w-full">
-                  {isLoading ? (
+                <Button
+                  disabled={isLoginLoading}
+                  type="submit"
+                  className="w-full"
+                >
+                  {isLoginLoading ? (
                     <span className="animate-pulse">Logining in...</span>
                   ) : (
                     "Login"

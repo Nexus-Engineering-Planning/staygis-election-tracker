@@ -1,32 +1,17 @@
 "use client";
 
-// import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-
-import type { VerificationFormData } from "@/lib/types";
-import { toast } from "sonner";
-import { forgotPasswordVerification } from "@/services/auth/forgot-password";
 import ForgotPasswordVerificationForm from "@/components/verification-form";
+import { VerificationRequestDto } from "@/lib/types/auth-types";
+import useForgotPasswordVerification from "@/lib/hooks/auth/useForgotPasswordVerification";
 
 const ForgotPasswordVerificationPage = () => {
-  //   const navigate = useNavigate();
-
-  const { mutate: forgotPasswordVerificationMutation, isPending } = useMutation(
-    forgotPasswordVerification()
-  );
+  const { mutate: forgotPasswordVerificationMutation, isPending } =
+    useForgotPasswordVerification();
 
   const handleForgotPasswordVerification = async (
-    values: VerificationFormData
+    values: VerificationRequestDto
   ) => {
-    forgotPasswordVerificationMutation(values, {
-      onSuccess: () => {
-        // navigate("/login");
-      },
-
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
+    forgotPasswordVerificationMutation(values);
   };
 
   return (
